@@ -357,6 +357,9 @@ class _BassAnimationScreenState extends State<BassAnimationScreen>
                   },
                   initialData: 0,
                   stream: streamController.stream),
+              const Row(
+                children: [],
+              )
             ],
           ),
         ));
@@ -397,36 +400,42 @@ class _BassAnimationScreenState extends State<BassAnimationScreen>
   }
 }
 
-// Center(
-//         child: GestureDetector(
-//           onTap: () async {
-//             if (!isPlaying) {
-//               await _playAudio();
-//               setState(() {
-//                 isPlaying = true;
-//               });
-//             } else {
-//               _puaseAudio();
-//             }
-//           },
-//           child: AnimatedBuilder(
-//             animation: _colorAnimation,
-//             builder: (context, child) {
-//               return AnimatedContainer(
-//                 duration: const Duration(milliseconds: 200),
-//                 width: _animation.value,
-//                 height: _animation.value,
-//                 decoration: BoxDecoration(
-//                   color: _colorAnimation.value,
-//                   borderRadius: BorderRadius.circular(_animation.value),
-//                 ),
-//                 alignment: Alignment.center,
-//                 child: Text(
-//                   isPlaying ? 'Playing...' : 'Tap to Play',
-//                   style: const TextStyle(color: Colors.white, fontSize: 20),
-//                 ),
-//               );
-//             },
-//           ),
-//         ),
-//       ),
+class RaisedGradientButton extends StatelessWidget {
+  final Widget child;
+  final Gradient? gradient;
+  final double width;
+  final double height;
+  final void Function()? onPressed;
+
+  const RaisedGradientButton({
+    super.key,
+    required this.child,
+    this.gradient,
+    this.width = double.infinity,
+    this.height = 50.0,
+    this.onPressed,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: width,
+      height: 50.0,
+      decoration: BoxDecoration(gradient: gradient, boxShadow: [
+        BoxShadow(
+          color: Colors.grey.shade50,
+          offset: const Offset(0.0, 1.5),
+          blurRadius: 1.5,
+        ),
+      ]),
+      child: Material(
+        color: Colors.transparent,
+        child: InkWell(
+            onTap: onPressed,
+            child: Center(
+              child: child,
+            )),
+      ),
+    );
+  }
+}
