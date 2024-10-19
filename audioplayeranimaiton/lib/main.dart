@@ -229,22 +229,22 @@ class _BassAnimationScreenState extends State<BassAnimationScreen>
               const SizedBox(
                 height: 13,
               ),
-              IconButton(
-                onPressed: () async {
-                  if (!isPlaying) {
-                    await _playAudio();
-                    setState(() {
-                      isPlaying = true;
-                    });
-                  } else {
-                    _puaseAudio();
-                  }
-                  streamDurationForCreateTimeLine();
-                  loopForSong();
-                },
-                icon: const Icon(Icons.play_arrow),
-                color: Colors.white,
-              ),
+              // IconButton(
+              //   onPressed: () async {
+              //     if (!isPlaying) {
+              //       await _playAudio();
+              //       setState(() {
+              //         isPlaying = true;
+              //       });
+              //     } else {
+              //       _puaseAudio();
+              //     }
+              //     streamDurationForCreateTimeLine();
+              //     loopForSong();
+              //   },
+              //   icon: const Icon(Icons.play_arrow),
+              //   color: Colors.white,
+              // ),
               StreamBuilder<int>(
                   builder: (context, snapshotForDuration) {
                     if (snapshotForDuration.connectionState ==
@@ -357,8 +357,49 @@ class _BassAnimationScreenState extends State<BassAnimationScreen>
                   },
                   initialData: 0,
                   stream: streamController.stream),
-              const Row(
-                children: [],
+
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 20),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: [
+                    const Icon(
+                      Icons.shuffle,
+                      color: Colors.white,
+                      size: 35,
+                    ),
+                    const Icon(
+                      Icons.skip_previous,
+                      color: Colors.white,
+                      size: 35,
+                    ),
+                    PlayAndPauseButton(
+                      onPressed: () async {
+                        if (!isPlaying) {
+                          await _playAudio();
+                          setState(() {
+                            isPlaying = true;
+                          });
+                        } else {
+                          _puaseAudio();
+                        }
+                        streamDurationForCreateTimeLine();
+                        loopForSong();
+                      },
+                      playStatus: isPlaying,
+                    ),
+                    const Icon(
+                      Icons.skip_next,
+                      color: Colors.white,
+                      size: 35,
+                    ),
+                    const Icon(
+                      Icons.favorite,
+                      color: Colors.white,
+                      size: 35,
+                    ),
+                  ],
+                ),
               )
             ],
           ),
@@ -400,42 +441,27 @@ class _BassAnimationScreenState extends State<BassAnimationScreen>
   }
 }
 
-class RaisedGradientButton extends StatelessWidget {
-  final Widget child;
-  final Gradient? gradient;
-  final double width;
-  final double height;
-  final void Function()? onPressed;
-
-  const RaisedGradientButton({
-    super.key,
-    required this.child,
-    this.gradient,
-    this.width = double.infinity,
-    this.height = 50.0,
-    this.onPressed,
-  });
+class PlayAndPauseButton extends StatelessWidget {
+  final void Function() onPressed;
+  final bool playStatus;
+  const PlayAndPauseButton(
+      {super.key, required this.onPressed, this.playStatus = false});
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: width,
-      height: 50.0,
-      decoration: BoxDecoration(gradient: gradient, boxShadow: [
-        BoxShadow(
-          color: Colors.grey.shade50,
-          offset: const Offset(0.0, 1.5),
-          blurRadius: 1.5,
-        ),
-      ]),
-      child: Material(
-        color: Colors.transparent,
-        child: InkWell(
-            onTap: onPressed,
-            child: Center(
-              child: child,
-            )),
-      ),
+      width: 90,
+      height: 90,
+      decoration: const BoxDecoration(
+          gradient: RadialGradient(
+            colors: [Color(0xffEC2947), Color(0xffD2058F)],
+            center: Alignment.center,
+          ),
+          shape: BoxShape.circle),
+      child: IconButton(
+          onPressed: onPressed,
+          icon: Icon(playStatus ? Icons.pause : Icons.play_arrow,
+              size: 60, color: Colors.white)),
     );
   }
 }
